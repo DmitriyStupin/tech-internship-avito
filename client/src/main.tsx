@@ -11,7 +11,6 @@ ReactDOM.createRoot(root).render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />} />
-
       <Route path="/ads" element={<AdsPage />} />
       <Route path="/ads/:id" element={<AdPage />} />
       <Route path="/ads/:id/edit" element={<EditAdPage />} />
