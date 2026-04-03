@@ -22,7 +22,7 @@ const AdsPage = () => {
       {ads.map((ad, index) => (
         <Link
           key={ad.title}
-          to={`/ads/${index}`}
+          to={`/ads/${index + 1}`}
           style={{textDecoration: 'none', color: 'inherit'}}
         >
           <div

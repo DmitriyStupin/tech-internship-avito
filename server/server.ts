@@ -5,6 +5,7 @@ import { Item } from 'src/types.ts';
 import { ItemsGetInQuerySchema, ItemUpdateInSchema } from 'src/validation.ts';
 import { treeifyError, ZodError } from 'zod';
 import { doesItemNeedRevision } from './src/utils.ts';
+import fastifyCors from "@fastify/cors";
 
 const ITEMS = items as Item[];
 
@@ -18,6 +19,12 @@ await fastify.register((await import('@fastify/middie')).default);
 fastify.use((_, __, next) =>
   new Promise(res => setTimeout(res, 300 + Math.random() * 700)).then(next),
 );
+
+await fastify.register(fastifyCors, {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 
 // Настройка CORS
 fastify.use((_, reply, next) => {

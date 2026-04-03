@@ -10,7 +10,7 @@ const AdPage = () => {
   useEffect(() => {
     if (!id) return;
 
-    getAdById(Number(id) + 1).then((res) => {
+    getAdById(Number(id)).then((res) => {
       setAd(res.data)
       console.log(res.data)
     })
