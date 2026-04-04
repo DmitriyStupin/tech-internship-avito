@@ -1,47 +1,56 @@
 .page {
   padding: 24px;
 
+  &Inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
   &Header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
 
     &Left {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      justify-content: space-between;
 
       &Title {
-        font-size: 24px;
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 1.33;
+        max-width: 942px;
       }
     }
 
     &Right {
       display: flex;
       flex-direction: column;
+      gap: 12px;
       align-items: flex-end;
-      gap: 4px;
 
       &Price {
-        font-size: 22px;
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 133%;
       }
 
       &Dates {
+        font-family: var(--second-family), sans-serif;
         text-align: right;
-        color: #666;
+        color: #848388;
       }
     }
   }
 
   &Details {
     display: flex;
-    gap: 24px;
+    gap: 32px;
 
     &Images {
       flex-shrink: 0;
-      max-width: 400px;
+      max-width: 480px;
 
       &Row {
         display: flex;
@@ -68,13 +77,45 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 36px;
 
       &Params {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        font-size: 14px;
+        gap: 16px;
+
+        &Title {
+          font-weight: 500;
+          font-size: 22px;
+          line-height: 127%;
+        }
+
+        &List {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        &Row {
+          padding: 0;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-family: var(--second-family), sans-serif;
+        }
+
+        &Key {
+          font-weight: 600;
+          color: rgba(0, 0, 0, 0.45);
+          font-size: 16px;
+          line-height: 140%;
+          width: 148px;
+        }
+
+        &Value {
+          line-height: 140%;
+          color: #1e1e1e;
+        }
       }
 
       &Panel {
@@ -89,15 +130,24 @@
   }
 
   &Description {
-    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 480px;
+    width: 100%;
+    align-self: flex-start;
 
-    h3 {
-      margin-bottom: 8px;
+    &Title {
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 127%;
     }
 
-    p {
-      font-size: 14px;
-      line-height: 1.5;
+    &Text {
+      font-family: var(--second-family);
+      line-height: 140%;
+      color: #1e1e1e;
+      overflow-wrap: break-word;
     }
   }
 }

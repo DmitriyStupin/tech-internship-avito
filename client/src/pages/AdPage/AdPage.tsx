@@ -1,8 +1,8 @@
-import {useParams, Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import type {ItemDetails} from "../../shared/types/ItemDetails.ts";
 import {getAdById} from "../../shared/api/adApi.ts";
-import {Button, Divider, Image, Alert} from "antd";
+import {Alert, Button, Divider, Image} from "antd";
 import {EditOutlined} from "@ant-design/icons";
 import placeholder from '../../assets/placeholder.png';
 import styles from './AdPage.module.scss';
@@ -91,30 +91,55 @@ const AdPage = () => {
 
   return (
     <div className={styles.page}>
-      <div className={clsx(styles.pageInner,'container')}>
+      <div className={clsx(styles.pageInner, 'container')}>
         <div className={styles.pageHeader}>
           <div className={styles.pageHeaderLeft}>
             <h1 className={styles.pageHeaderLeftTitle}>{ad.title}</h1>
             <Link to={`/ads/${id}/edit`}>
-              <Button type="primary" icon={<EditOutlined />}>Редактировать</Button>
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+              >Редактировать</Button>
             </Link>
           </div>
           <div className={styles.pageHeaderRight}>
             <div className={styles.pageHeaderRightPrice}>{ad.price} ₽</div>
             <div className={styles.pageHeaderRightDates}>
-              <div>Опубликовано: {new Date(ad.createdAt).toLocaleString('ru-RU', {day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}).replace(' в','')}</div>
-              {ad.updatedAt && <div>Отредактировано: {new Date(ad.updatedAt).toLocaleString('ru-RU', {day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}).replace(' в','')}</div>}
+              <div>Опубликовано: {new Date(ad.createdAt).toLocaleString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                hour: '2-digit',
+                minute: '2-digit'
+              }).replace(' в', '')}</div>
+              {ad.updatedAt &&
+                <div>Отредактировано: {new Date(ad.updatedAt).toLocaleString('ru-RU', {
+                  day: 'numeric',
+                  month: 'long',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }).replace(' в', '')}</div>}
             </div>
           </div>
         </div>
-        <Divider />
+        <Divider style={{ margin: 0 }} />
         <div className={styles.pageDetails}>
           <div className={styles.pageDetailsImages}>
             <Image.PreviewGroup>
-              <Image src={photos[0]} alt="Главное фото" width={400} style={{marginBottom: 12}} />
+              <Image
+                src={photos[0]}
+                alt="Главное фото"
+                width={480}
+                style={{marginBottom: 12}}
+              />
               <div className={styles.pageDetailsImagesRow}>
                 {photos.slice(1).map((src, idx) => (
-                  <Image key={idx} src={src} width={100} height={100} style={{objectFit:'cover', marginRight: 8}} />
+                  <Image
+                    key={idx}
+                    src={src}
+                    width={120}
+                    height={120}
+                    style={{objectFit: 'cover', marginRight: 8}}
+                  />
                 ))}
               </div>
             </Image.PreviewGroup>
@@ -125,14 +150,14 @@ const AdPage = () => {
               <Alert
                 title="Требуются доработки"
                 description={
-                  <>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <div>У объявления не заполнены поля:</div>
-                    <ul>
+                    <ul style={{ margin: 0, paddingLeft: '16px' }}>
                       {emptyFields.map(field => (
                         <li key={field}>{fieldNames[field] || field}</li>
                       ))}
                     </ul>
-                  </>
+                  </div>
                 }
                 type="warning"
                 showIcon
@@ -141,18 +166,24 @@ const AdPage = () => {
             )}
 
             <div className={styles.pageDetailsInfoParams}>
-              {Object.entries(ad.params)
-                .filter(([_, v]) => v !== undefined && v !== null && v !== '')
-                .map(([key, value]) => (
-                  <div key={key}><strong>{fieldNames[key] || key}</strong>: {fieldKeyNames[value] || value}</div>
-                ))
-              }
+              <h3 className={styles.pageDetailsInfoParamsTitle}>Характеристики</h3>
+              <ul className={styles.pageDetailsInfoParamsList}>
+                {Object.entries(ad.params)
+                  .filter(([_, v]) => v !== undefined && v !== null && v !== '')
+                  .map(([key, value]) => (
+                    <li className={styles.pageDetailsInfoParamsRow} key={key}>
+                      <span className={styles.pageDetailsInfoParamsKey}>{fieldNames[key] || key}</span>
+                      <span className={styles.pageDetailsInfoParamsValue}>{fieldKeyNames[value] || value}</span>
+                    </li>
+                  ))
+                }
+              </ul>
             </div>
           </div>
         </div>
         <div className={styles.pageDescription}>
-          <h3>Описание</h3>
-          <p>{ad.description || "Отсутствует"}</p>
+          <h3 className={styles.pageDescriptionTitle}>Описание</h3>
+          <p className={styles.pageDescriptionText}>{ad.description || "Отсутствует"}</p>
         </div>
       </div>
     </div>
