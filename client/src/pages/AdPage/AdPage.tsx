@@ -76,6 +76,19 @@ const AdPage = () => {
     color: 'Цвет'
   };
 
+  const fieldKeyNames: Record<string, string> = {
+    automatic: "Автоматическая",
+    manual: 'Механическая',
+    phone: 'Мобильный телефон',
+    laptop: 'Ноутбук',
+    misc: 'Разное',
+    new: 'Новое',
+    used: "Б/У",
+    flat: 'Квартира',
+    house: 'Дом',
+    room: 'Комната'
+  }
+
   return (
     <div className={styles.page}>
       <div className={clsx(styles.pageInner,'container')}>
@@ -115,8 +128,8 @@ const AdPage = () => {
                   <>
                     <div>У объявления не заполнены поля:</div>
                     <ul>
-                      {emptyFields.map(f => (
-                        <li key={f}>{fieldNames[f] || f}</li>
+                      {emptyFields.map(field => (
+                        <li key={field}>{fieldNames[field] || field}</li>
                       ))}
                     </ul>
                   </>
@@ -131,7 +144,7 @@ const AdPage = () => {
               {Object.entries(ad.params)
                 .filter(([_, v]) => v !== undefined && v !== null && v !== '')
                 .map(([key, value]) => (
-                  <div key={key}><strong>{fieldNames[key]}</strong>: {value}</div>
+                  <div key={key}><strong>{fieldNames[key] || key}</strong>: {fieldKeyNames[value] || value}</div>
                 ))
               }
             </div>
