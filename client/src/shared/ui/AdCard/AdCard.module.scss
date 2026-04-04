@@ -8,12 +8,29 @@
   &Image {
     width: 200px;
     height: 150px;
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
+  }
+
+  &Bottom {
+    padding: 16px 22px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &Info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   &Title {
     font-size: 16px;
     font-weight: 400;
-    margin-bottom: 4px;
+    white-space: nowrap;       // одна строка
+    overflow: hidden;          // обрезка текста
+    text-overflow: ellipsis;   // троеточие
   }
 
   &Price {
@@ -34,7 +51,25 @@
     background: #ffffff;
   }
 
-  &Bottom {
-    padding: 16px 22px 22px 22px;
+  &NeedsRevision {
+    display: flex;
+    align-items: center;
+    align-self: flex-start;
+    font-size: 14px;
+    line-height: 157%;
+    padding: 2px 8px;
+    color: #faad14;
+    background: #f9f1e6;
+    font-weight: 500;
+    gap: 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background-color: #faad14;
+      border-radius: 50%;
+    }
   }
 }
