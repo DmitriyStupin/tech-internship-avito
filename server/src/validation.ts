@@ -41,7 +41,7 @@ export const ItemsGetInQuerySchema = z.object({
     .string()
     .optional()
     .transform(val => (val ? parseInt(val, 10) : undefined))
-    .pipe(z.number().int().positive().optional().default(10)),
+    .pipe(z.number().int().positive().optional()), // NOTE: Сбросил ограничение, изначально .default(10)
   skip: z
     .string()
     .optional()

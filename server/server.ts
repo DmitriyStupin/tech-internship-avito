@@ -93,24 +93,27 @@ fastify.get<ItemsGetRequest>('/items', request => {
     );
   });
 
+  const sortedItems = filteredItems
+    .toSorted((item1, item2) => {
+      let comparisonValue = 0;
+
+      if (!sortDirection) return comparisonValue;
+
+      if (sortColumn === 'title') {
+        comparisonValue = item1.title.localeCompare(item2.title);
+      } else if (sortColumn === 'createdAt') {
+        comparisonValue =
+          new Date(item1.createdAt).valueOf() -
+          new Date(item2.createdAt).valueOf();
+      }
+
+      return (sortDirection === 'desc' ? -1 : 1) * comparisonValue;
+    });
+
+  const slicedItems = limit ? sortedItems.slice(skip, skip + limit) : sortedItems.slice(skip);
+
   return {
-    items: filteredItems
-      .toSorted((item1, item2) => {
-        let comparisonValue = 0;
-
-        if (!sortDirection) return comparisonValue;
-
-        if (sortColumn === 'title') {
-          comparisonValue = item1.title.localeCompare(item2.title);
-        } else if (sortColumn === 'createdAt') {
-          comparisonValue =
-            new Date(item1.createdAt).valueOf() -
-            new Date(item2.createdAt).valueOf();
-        }
-
-        return (sortDirection === 'desc' ? -1 : 1) * comparisonValue;
-      })
-      .slice(skip, skip + limit)
+    items: slicedItems
       .map(item => ({
         category: item.category,
         title: item.title,
