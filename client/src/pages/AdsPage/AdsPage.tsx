@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {getAds} from "../../shared/api/adsApi.ts";
 import type {AdItem} from "../../shared/types/AdItem.ts";
 import {Link} from "react-router-dom";
+import AdCard from "../../shared/ui/AdCard";
 
 const AdsPage = () => {
   const [ads, setAds] = useState<AdItem[]>([])
@@ -18,27 +19,25 @@ const AdsPage = () => {
   }
 
   return (
-    <div>
-      {ads.map((ad, index) => (
-        <Link
-          key={ad.title}
-          to={`/ads/${index + 1}`}
-          style={{textDecoration: 'none', color: 'inherit'}}
-        >
-          <div
-            style={{
-              border: '1px solid #000',
-              padding: '10px',
-              marginBottom: '10px'
-            }}
+    <div className={'container'}>
+      <h1>Мои объявления</h1>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: "16px",
+        }}
+      >
+        {ads.map((ad, index) => (
+          <Link
+            key={ad.title}
+            to={`/ads/${index + 1}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <h3>{ad.title}</h3>
-            <p>{ad.category}</p>
-            <span>{ad.price}</span>
-            <p>{ad.needsRevision ? 'Требует доработок' : ''}</p>
-          </div>
-        </Link>
-      ))}
+            <AdCard {...ad} />
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
