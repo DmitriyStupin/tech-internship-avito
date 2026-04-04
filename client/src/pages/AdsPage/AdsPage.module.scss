@@ -1,7 +1,40 @@
 .page {
+  &Inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   &Top {
     display: flex;
     flex-direction: column;
+
+    &Controls {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      padding: 12px;
+      background: #fff;
+      border-radius: 8px;
+
+      &Search {
+        background: #f6f6f8;
+        border: none;
+        font-size: 14px;
+        line-height: 157%;
+        color: #707176
+      }
+
+      &Right {
+        display: flex;
+        gap: 16px;
+      }
+
+      &Buttons {
+        display: flex;
+      }
+
+    }
   }
 
   &Title {
@@ -13,5 +46,39 @@
   &Subtitle {
     font-size: 18px;
     color: #848388;
+  }
+
+  &FiltersColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 256px;
+    align-self: flex-start;
+  }
+
+  &Filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+
+    &Title {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 150%;
+    }
+
+    &Collapse {
+      background: transparent;
+
+      &Panel {
+        background: transparent;
+        border: none;
+      }
+    }
+
+
   }
 }
