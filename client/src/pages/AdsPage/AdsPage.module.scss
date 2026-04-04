@@ -1,0 +1,17 @@
+.page {
+  &Top {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &Title {
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 127%;
+  }
+
+  &Subtitle {
+    font-size: 18px;
+    color: #848388;
+  }
+}

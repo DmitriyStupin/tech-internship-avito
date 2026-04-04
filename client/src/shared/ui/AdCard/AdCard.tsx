@@ -1,6 +1,7 @@
-import {Card, Tag} from "antd";
+import {Tag} from "antd";
 import placeholder from '../../../assets/placeholder.png'
 import type {AdItem} from "../../types/AdItem.ts";
+import styles from './AdCard.module.scss';
 
 type AdCardProps = AdItem
 
@@ -13,26 +14,25 @@ const AdCard = (props: AdCardProps) => {
   } = props
 
   return (
-    <Card
-      style={{ width: 200 }}
-      cover={
-        <img
-          draggable={false}
-          alt="placeholder"
-          src={placeholder}
-          style={{
-            borderRadius: '0 0 8px 8px',
-          }}
-        />
-      }
+    <div
+      className={styles.card}
     >
-      <h3>{title}</h3>
-      <p>{price}</p>
-      <Tag>{category}</Tag>
-      {needsRevision && (
-        <span>Требует доработок</span>
-      )}
-    </Card>
+      <img
+        alt="placeholder"
+        src={placeholder}
+        className={styles.cardImage}
+      />
+      <div className={styles.cardBottom}>
+        <div className={styles.cardInfo}>
+          <h3 className={styles.cardTitle}>{title}</h3>
+          <p className={styles.cardPrice}>{price} ₽</p>
+        </div>
+        <Tag className={styles.cardTag}>{category}</Tag>
+        {needsRevision && (
+          <span>Требует доработок</span>
+        )}
+      </div>
+    </div>
   );
 };
 

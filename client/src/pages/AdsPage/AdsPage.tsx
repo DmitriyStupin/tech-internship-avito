@@ -3,6 +3,7 @@ import {getAds} from "../../shared/api/adsApi.ts";
 import type {AdItem} from "../../shared/types/AdItem.ts";
 import {Link} from "react-router-dom";
 import AdCard from "../../shared/ui/AdCard";
+import styles from './AdsPage.module.scss'
 
 const AdsPage = () => {
   const [ads, setAds] = useState<AdItem[]>([])
@@ -20,7 +21,10 @@ const AdsPage = () => {
 
   return (
     <div className={'container'}>
-      <h1>Мои объявления</h1>
+      <div className={styles.pageTop}>
+        <h1 className={styles.pageTitle}>Мои объявления</h1>
+        <span className={styles.pageSubtitle}>{ads.length} объявлений</span>
+      </div>
       <div
         style={{
           display: "grid",

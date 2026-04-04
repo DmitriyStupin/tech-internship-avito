@@ -1,0 +1,13 @@
+body {
+  font-family: var(--font-family), sans-serif;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.85)
+}
+
+.container {
+  max-width: 1335px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
