@@ -16,6 +16,7 @@ import {useEffect} from "react";
 import {getAdById} from "../../shared/api/adApi.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {updateAdById} from "../../shared/api/adApiEdit.ts";
+import {paramsFieldsConfig} from "../../shared/config/paramsFields.ts";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -25,6 +26,7 @@ const EditAdPage = () => {
   const navigate = useNavigate()
 
   const [form] = Form.useForm()
+  const category = Form.useWatch('category', form)
 
   useEffect(() => {
     if (!id) return
@@ -32,7 +34,6 @@ const EditAdPage = () => {
     getAdById(Number(id))
       .then((res) => {
         const item = res.data
-        console.log(item)
 
         form.setFieldsValue({
           category: item.category,
@@ -133,20 +134,42 @@ const EditAdPage = () => {
 
         <Title level={5}>Характеристики</Title>
 
-        {/* TODO: Динамические поля */}
-        <Form.Item
-          label="Бренд"
-          name={["params", "brand"]}
-        >
-          <Input allowClear={{clearIcon: <CloseCircleOutlined />}} />
-        </Form.Item>
+        {category &&
+          paramsFieldsConfig[category]?.map((field) => {
+            if (field.type === "number") {
+              return (
+                <Form.Item
+                  key={field.name}
+                  label={field.label}
+                  name={["params", field.name]}
+                >
+                  <InputNumber style={{ width: "100%" }} />
+                </Form.Item>
+              );
+            }
 
-        <Form.Item
-          label="Модель"
-          name={["params", "model"]}
-        >
-          <Input allowClear={{clearIcon: <CloseCircleOutlined />}} />
-        </Form.Item>
+            if (field.type === "select") {
+              return (
+                <Form.Item
+                  key={field.name}
+                  label={field.label}
+                  name={["params", field.name]}
+                >
+                  <Select options={field.options} />
+                </Form.Item>
+              );
+            }
+
+            return (
+              <Form.Item
+                key={field.name}
+                label={field.label}
+                name={["params", field.name]}
+              >
+                <Input allowClear />
+              </Form.Item>
+            );
+          })}
 
         <Divider />
 
@@ -188,7 +211,8 @@ const EditAdPage = () => {
         </Space>
       </Form>
     </div>
-  );
+  )
+    ;
 };
 
 export default EditAdPage;
