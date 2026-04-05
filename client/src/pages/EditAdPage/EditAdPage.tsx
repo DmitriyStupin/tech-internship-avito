@@ -343,6 +343,8 @@ const EditAdPage = () => {
         >
           <TextArea
             rows={4}
+            showCount
+            maxLength={1000}
             placeholder="Введите описание"
           />
         </Form.Item>
