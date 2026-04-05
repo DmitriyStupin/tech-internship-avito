@@ -19,7 +19,11 @@ const AdPage = () => {
     getAdById(Number(id)).then((res) => setAd(res.data));
   }, [id]);
 
-  if (!ad) return <div>Загрузка объявления...</div>;
+  if (!ad) return (
+    <div className={clsx(styles.pageInner, "container")}>
+      <div>Загрузка объявления...</div>
+    </div>
+  )
 
   const requiredFieldsMap: Record<string, string[]> = {
     auto: [
@@ -79,6 +83,8 @@ const AdPage = () => {
     house: "Дом",
     room: "Комната",
   };
+
+
 
   return (
     <div className={styles.page}>

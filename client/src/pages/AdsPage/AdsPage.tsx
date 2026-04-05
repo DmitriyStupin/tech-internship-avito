@@ -51,7 +51,11 @@ const AdsPage = () => {
   };
 
   if (!ads.length) {
-    return <div>Загрузка объвлений...</div>;
+    return (
+      <div className={clsx(styles.pageInner, "container")}>
+        <div>Загрузка объявлений...</div>
+      </div>
+    );
   }
 
   return (
