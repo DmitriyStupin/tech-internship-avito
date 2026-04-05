@@ -12,7 +12,7 @@ import {
 import {BulbOutlined, CloseCircleOutlined,} from "@ant-design/icons";
 import styles from './EditAdPage.module.scss'
 import clsx from "clsx";
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import {getAdById} from "../../shared/api/adApi.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {updateAdById} from "../../shared/api/adApiEdit.ts";
@@ -24,12 +24,22 @@ const {TextArea} = Input;
 const EditAdPage = () => {
   const {id} = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const isInitialLoad = useRef(true)
+  const storageKey = `edit-ad-${id}`
 
   const [form] = Form.useForm()
   const category = Form.useWatch('category', form)
 
   useEffect(() => {
     if (!id) return
+
+    const savedAd = localStorage.getItem(storageKey)
+
+    if (savedAd) {
+      form.setFieldsValue(JSON.parse(savedAd))
+      message.success("Черновик загружен");
+      return
+    }
 
     getAdById(Number(id))
       .then((res) => {
@@ -53,6 +63,7 @@ const EditAdPage = () => {
 
     updateAdById(Number(id), values)
       .then(() => {
+        localStorage.removeItem(storageKey)
         message.success("Изменения сохранены");
         navigate(`/ads/${id}`);
       })
@@ -60,6 +71,22 @@ const EditAdPage = () => {
         message.error("Ошибка сохранения");
       });
   }
+
+  useEffect(() => {
+    if (!category) return;
+
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+
+    form.setFields([
+      {
+        name: ['params'],
+        value: {},
+      },
+    ]);
+  }, [category]);
 
   return (
     <div className={clsx(styles.pageInner, 'container')}>
@@ -69,6 +96,11 @@ const EditAdPage = () => {
         form={form}
         layout="vertical"
         onFinish={onFinish}
+        onValuesChange={(_, allValues) => {
+          if (!id) return;
+
+          localStorage.setItem(storageKey, JSON.stringify(allValues));
+        }}
       >
         <Form.Item
           label="Категория"
@@ -143,7 +175,7 @@ const EditAdPage = () => {
                   label={field.label}
                   name={["params", field.name]}
                 >
-                  <InputNumber style={{ width: "100%" }} />
+                  <InputNumber style={{width: "100%"}} />
                 </Form.Item>
               );
             }
@@ -202,11 +234,17 @@ const EditAdPage = () => {
           <Button
             type="primary"
             htmlType={"submit"}
+            disabled={
+              !form.isFieldsTouched(true)
+            }
           >Сохранить</Button>
           <Button
             color="default"
             variant="filled"
-            onClick={() => navigate(`/ads/${id}`)}
+            onClick={() => {
+              localStorage.removeItem(storageKey)
+              navigate(`/ads/${id}`)
+            }}
           >Отменить</Button>
         </Space>
       </Form>
