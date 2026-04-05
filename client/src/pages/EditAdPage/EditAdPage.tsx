@@ -28,7 +28,13 @@ const EditAdPage = () => {
   const storageKey = `edit-ad-${id}`
 
   const [form] = Form.useForm()
-  const category = Form.useWatch('category', form)
+  const category = Form.useWatch<'electronics' | 'auto' | 'real_estate'>('category', form)
+  const requiredFields = Form.useWatch([], form);
+
+  const isFormValid =
+    requiredFields?.category &&
+    requiredFields?.title &&
+    requiredFields?.price;
 
   useEffect(() => {
     if (!id) return
@@ -234,8 +240,10 @@ const EditAdPage = () => {
           <Button
             type="primary"
             htmlType={"submit"}
-            disabled={
-              !form.isFieldsTouched(true)
+            disabled={!isFormValid}
+            color={
+              (!form.isFieldsTouched() ||
+              form.getFieldsError().some(({ errors }) => errors.length)) ? 'default' : 'primary'
             }
           >Сохранить</Button>
           <Button

@@ -1,4 +1,19 @@
-export const paramsFieldsConfig = {
+type FieldType = 'text' | 'number' | 'select'
+
+type ParamField = {
+  name: string
+  label: string
+  type: FieldType
+  options?: { label: string; value: string }[]
+}
+
+type ParamsConfig = {
+  electronics: ParamField[]
+  auto: ParamField[]
+  real_estate: ParamField[]
+}
+
+export const paramsFieldsConfig: ParamsConfig = {
   electronics: [
     {
       name: "type", label: "Тип", type: 'select', options: [
@@ -36,8 +51,8 @@ export const paramsFieldsConfig = {
         {label: "Дом", value: "house"},
         {label: "Комната", value: "room"},
       ]},
-    {name: "address", label: "Адрес"},
-    {name: "area", label: "Площадь"},
-    {name: "floor", label: "Этаж"},
+    {name: "address", label: "Адрес", type: 'text'},
+    {name: "area", label: "Площадь", type: 'number'},
+    {name: "floor", label: "Этаж", type: 'number'},
   ],
 };
