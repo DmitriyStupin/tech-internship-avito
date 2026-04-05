@@ -195,7 +195,7 @@ const EditAdPage = () => {
                   key={field.name}
                   label={field.label}
                   name={["params", field.name]}
-                  validateStatus={!params?.[field.name] ? "warning" : ""}
+                  validateStatus={!params?.[field.name] ? "warning" : undefined}
                 >
                   <InputNumber style={{width: "100%"}} />
                 </Form.Item>
@@ -208,7 +208,7 @@ const EditAdPage = () => {
                   key={field.name}
                   label={field.label}
                   name={["params", field.name]}
-                  validateStatus={!params?.[field.name] ? "warning" : ""}
+                  validateStatus={!params?.[field.name] ? "warning" : undefined}
                 >
                   <Select options={field.options} />
                 </Form.Item>
@@ -220,7 +220,7 @@ const EditAdPage = () => {
                 key={field.name}
                 label={field.label}
                 name={["params", field.name]}
-                validateStatus={!params?.[field.name] ? "warning" : ""}
+                validateStatus={!params?.[field.name] ? "warning" : undefined}
               >
                 <Input allowClear />
               </Form.Item>
@@ -259,10 +259,6 @@ const EditAdPage = () => {
             type="primary"
             htmlType={"submit"}
             disabled={!isFormValid}
-            color={
-              (!form.isFieldsTouched() ||
-              form.getFieldsError().some(({ errors }) => errors.length)) ? 'default' : 'primary'
-            }
           >Сохранить</Button>
           <Button
             color="default"
