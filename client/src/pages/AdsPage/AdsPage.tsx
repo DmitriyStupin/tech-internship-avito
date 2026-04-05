@@ -6,29 +6,75 @@ import AdCard from "../../shared/ui/AdCard";
 import styles from './AdsPage.module.scss'
 
 import {
-  Input,
   Button,
-  Select,
   Checkbox,
-  Pagination,
-  Space,
+  Collapse,
   Divider,
-  Switch,
-  Collapse
+  Input,
+  Pagination,
+  Select,
+  Space,
+  Switch
 } from "antd";
-import { SearchOutlined, AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  SearchOutlined,
+  UnorderedListOutlined
+} from "@ant-design/icons";
 import clsx from "clsx";
 
-const { Option } = Select;
+const {Option} = Select;
 
 const AdsPage = () => {
   const [ads, setAds] = useState<AdItem[]>([])
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [needsRevisionOnly, setNeedsRevisionOnly] = useState(false)
+  const [sortOption, setSortOption] = useState('nameAsc')
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10
+  const [gridView, setGridView] = useState(true)
+
+  const fetchAds = async () => {
+    setLoading(true)
+
+    try {
+      const sortColumn = sortOption === "nameAsc" || sortOption === "nameDesc" ? "title" : "createdAt";
+      const sortDirection =
+        sortOption === "nameAsc" || sortOption === "dateNew" || sortOption === "priceAsc"
+          ? "asc"
+          : "desc";
+
+      const res = await getAds({
+        q: searchQuery || undefined,
+        limit: pageSize,
+        skip: (currentPage - 1) * pageSize,
+        needsRevision: needsRevisionOnly ? true : undefined,
+        categories: selectedCategories.length > 0 ? selectedCategories.join(",") : undefined,
+        sortColumn,
+        sortDirection
+      });
+
+      setAds(res.data.items);
+      setTotal(res.data.total);
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    getAds().then((res) => {
-      setAds(res.data.items)
-    })
-  }, []);
+    fetchAds();
+  }, [searchQuery, selectedCategories, needsRevisionOnly, sortOption, currentPage]);
+
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategories([]);
+    setNeedsRevisionOnly(false);
+    setSortOption("nameAsc");
+    setCurrentPage(1);
+  };
 
   if (!ads.length) {
     return <div>Загрузка объвлений...</div>
@@ -36,24 +82,35 @@ const AdsPage = () => {
 
   return (
     <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      <div className={clsx(styles.pageInner,'container')}>
+      <div className={clsx(styles.pageInner, 'container')}>
         <div className={styles.pageTop}>
           <h1 className={styles.pageTitle}>Мои объявления</h1>
-          <span className={styles.pageSubtitle}>{ads.length} объявлений</span>
+          <span className={styles.pageSubtitle}>{total} объявлений</span>
         </div>
+
         <div className={styles.pageTopControls}>
           <Input
             placeholder="Найти объявление..."
             suffix={<SearchOutlined />}
             className={styles.pageTopControlsSearch}
+            value={searchQuery}
+            onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
           />
           <div className={styles.pageTopControlsRight}>
             <div className={styles.pageTopControlsButtons}>
-              <Button icon={<AppstoreOutlined />} />
-              <Button icon={<UnorderedListOutlined />} />
+              <Button
+                icon={<AppstoreOutlined />}
+                type={gridView ? "primary" : "default"}
+                onClick={() => setGridView(true)}
+              />
+              <Button
+                icon={<UnorderedListOutlined />}
+                type={!gridView ? "primary" : "default"}
+                onClick={() => setGridView(false)}
+              />
             </div>
 
-            <Select defaultValue="nameAsc" className="sortSelect">
+            <Select value={sortOption} onChange={val => setSortOption(val)} className="sortSelect">
               <Option value="nameAsc">Название: А → Я</Option>
               <Option value="nameDesc">Название: Я → А</Option>
               <Option value="dateNew">Сначала новые</Option>
@@ -65,6 +122,7 @@ const AdsPage = () => {
         </div>
 
         <div style={{ display: 'flex', gap: 24 }}>
+          {/* Фильтры */}
           <div className={styles.pageFiltersColumn}>
             <div className={styles.pageFilters}>
               <h3 className={styles.pageFiltersTitle}>Фильтры</h3>
@@ -78,9 +136,13 @@ const AdsPage = () => {
                     key: '1',
                     label: 'Категории',
                     children: (
-                      <Checkbox.Group style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <Checkbox.Group
+                        style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+                        value={selectedCategories}
+                        onChange={val => { setSelectedCategories(val as string[]); setCurrentPage(1); }}
+                      >
                         <Checkbox value="auto">Авто</Checkbox>
-                        <Checkbox value="realEstate">Недвижимость</Checkbox>
+                        <Checkbox value="real_estate">Недвижимость</Checkbox>
                         <Checkbox value="electronics">Электроника</Checkbox>
                       </Checkbox.Group>
                     ),
@@ -90,35 +152,48 @@ const AdsPage = () => {
               <Divider style={{ margin: 0 }} />
               <Space align="center">
                 <span>Только требующие доработок</span>
-                <Switch />
+                <Switch
+                  checked={needsRevisionOnly}
+                  onChange={val => { setNeedsRevisionOnly(val); setCurrentPage(1); }}
+                />
               </Space>
             </div>
-            <Button>Сбросить фильтры</Button>
+            <Button onClick={handleResetFilters} style={{ marginTop: 12 }}>Сбросить фильтры</Button>
           </div>
 
+          {/* Список объявлений */}
           <div style={{ flex: 1 }}>
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(5, minmax(0, 200px))',
+                gridTemplateColumns: gridView ? 'repeat(5, minmax(0, 200px))' : '1fr',
                 columnGap: '9.75px',
                 rowGap: '12px',
                 justifyContent: 'start',
               }}
             >
-              {ads.map((ad, index) => (
-                <Link
-                  key={ad.title}
-                  to={`/ads/${index + 1}`}
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <AdCard {...ad} />
-                </Link>
-              ))}
+              {loading ? (
+                <div>Загрузка объявлений...</div>
+              ) : (
+                ads.map((ad, index) => (
+                  <Link
+                    key={ad.title + index}
+                    to={`/ads/${index + 1}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <AdCard {...ad} />
+                  </Link>
+                ))
+              )}
             </div>
 
             <div style={{ marginTop: 24, textAlign: 'center' }}>
-              <Pagination total={ads.length} pageSize={10} />
+              <Pagination
+                total={total}
+                pageSize={pageSize}
+                current={currentPage}
+                onChange={page => setCurrentPage(page)}
+              />
             </div>
           </div>
         </div>
