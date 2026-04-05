@@ -24,10 +24,11 @@ const {TextArea} = Input;
 const EditAdPage = () => {
   const {id} = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [form] = Form.useForm()
   const isInitialLoad = useRef(true)
   const storageKey = `edit-ad-${id}`
+  const params = Form.useWatch("params", form);
 
-  const [form] = Form.useForm()
   const category = Form.useWatch<'electronics' | 'auto' | 'real_estate'>('category', form)
   const requiredFields = Form.useWatch([], form);
 
@@ -180,6 +181,7 @@ const EditAdPage = () => {
                   key={field.name}
                   label={field.label}
                   name={["params", field.name]}
+                  validateStatus={!params?.[field.name] ? "warning" : ""}
                 >
                   <InputNumber style={{width: "100%"}} />
                 </Form.Item>
@@ -192,6 +194,7 @@ const EditAdPage = () => {
                   key={field.name}
                   label={field.label}
                   name={["params", field.name]}
+                  validateStatus={!params?.[field.name] ? "warning" : ""}
                 >
                   <Select options={field.options} />
                 </Form.Item>
@@ -203,6 +206,7 @@ const EditAdPage = () => {
                 key={field.name}
                 label={field.label}
                 name={["params", field.name]}
+                validateStatus={!params?.[field.name] ? "warning" : ""}
               >
                 <Input allowClear />
               </Form.Item>
