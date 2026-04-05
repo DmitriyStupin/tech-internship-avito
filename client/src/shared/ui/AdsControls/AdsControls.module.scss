@@ -1,0 +1,28 @@
+.pageTop {
+  &Controls {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+
+    &Search {
+      background: #f6f6f8;
+      border: none;
+      font-size: 14px;
+      line-height: 157%;
+      color: #707176;
+    }
+
+    &Right {
+      display: flex;
+      gap: 16px;
+    }
+
+    &Buttons {
+      display: flex;
+      gap: 4px;
+    }
+  }
+}

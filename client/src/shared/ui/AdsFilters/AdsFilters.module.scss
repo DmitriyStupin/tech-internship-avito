@@ -1,0 +1,33 @@
+.page {
+  &FiltersColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 256px;
+    align-self: flex-start;
+  }
+
+  &Filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+
+    &Title {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 150%;
+    }
+
+    &Collapse {
+      background: transparent;
+
+      &Panel {
+        background: transparent;
+        border: none;
+      }
+    }
+  }
+}

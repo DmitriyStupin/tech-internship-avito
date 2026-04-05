@@ -1,28 +1,15 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import AdCard from "../../shared/ui/AdCard";
 import styles from "./AdsPage.module.scss";
 
 import {
-  Button,
-  Checkbox,
-  Collapse,
-  Divider,
-  Input,
   Pagination,
-  Select,
-  Space,
-  Switch,
 } from "antd";
-import {
-  AppstoreOutlined,
-  SearchOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
 import clsx from "clsx";
 import { useAdsStore } from "../../shared/store/adsStore.ts";
+import AdsFilters from "../../shared/ui/AdsFilters";
+import AdsControls from "../../shared/ui/AdsControls";
+import AdsGrid from "../../shared/ui/AdsGrid";
 
-const { Option } = Select;
 
 const AdsPage = () => {
   const {
@@ -75,122 +62,25 @@ const AdsPage = () => {
           <span className={styles.pageSubtitle}>{total} объявлений</span>
         </div>
 
-        <div className={styles.pageTopControls}>
-          <Input
-            placeholder="Найти объявление..."
-            suffix={<SearchOutlined />}
-            className={styles.pageTopControlsSearch}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
-          <div className={styles.pageTopControlsRight}>
-            <div className={styles.pageTopControlsButtons}>
-              <Button
-                icon={<AppstoreOutlined />}
-                type={gridView ? "primary" : "default"}
-                onClick={() => setGridView(true)}
-              />
-              <Button
-                icon={<UnorderedListOutlined />}
-                type={!gridView ? "primary" : "default"}
-                onClick={() => setGridView(false)}
-              />
-            </div>
-
-            <Select
-              value={sortOption}
-              onChange={(val) => setSortOption(val)}
-              className="sortSelect"
-            >
-              <Option value="nameAsc">Название: А → Я</Option>
-              <Option value="nameDesc">Название: Я → А</Option>
-              <Option value="dateNew">Сначала новые</Option>
-              <Option value="dateOld">Сначала старые</Option>
-              <Option value="priceAsc">Цена: дешевые</Option>
-              <Option value="priceDesc">Цена: дорогие</Option>
-            </Select>
-          </div>
-        </div>
+        <AdsControls
+          gridView={gridView}
+          sortOption={sortOption}
+          searchQuery={searchQuery}
+          onGridViewChange={setGridView}
+          onSortChange={setSortOption}
+          onSearchChange={(val) => { setSearchQuery(val); setCurrentPage(1); }}
+        />
 
         <div style={{ display: "flex", gap: 24 }}>
-          <div className={styles.pageFiltersColumn}>
-            <div className={styles.pageFilters}>
-              <h3 className={styles.pageFiltersTitle}>Фильтры</h3>
-              <Collapse
-                bordered={false}
-                defaultActiveKey={["1"]}
-                className={styles.pageFiltersCollapse}
-                expandIconPlacement="end"
-                items={[
-                  {
-                    key: "1",
-                    label: "Категории",
-                    children: (
-                      <Checkbox.Group
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 8,
-                        }}
-                        value={selectedCategories}
-                        onChange={(val) => {
-                          setSelectedCategories(val as string[]);
-                          setCurrentPage(1);
-                        }}
-                      >
-                        <Checkbox value="auto">Авто</Checkbox>
-                        <Checkbox value="real_estate">Недвижимость</Checkbox>
-                        <Checkbox value="electronics">Электроника</Checkbox>
-                      </Checkbox.Group>
-                    ),
-                  },
-                ]}
-              />
-              <Divider style={{ margin: 0 }} />
-              <Space align="center">
-                <span>Только требующие доработок</span>
-                <Switch
-                  checked={needsRevisionOnly}
-                  onChange={(val) => {
-                    setNeedsRevisionOnly(val);
-                    setCurrentPage(1);
-                  }}
-                />
-              </Space>
-            </div>
-            <Button onClick={handleResetFilters} style={{ marginTop: 12 }}>
-              Сбросить фильтры
-            </Button>
-          </div>
+          <AdsFilters
+            selectedCategories={selectedCategories}
+            needsRevisionOnly={needsRevisionOnly}
+            onCategoriesChange={(val) => { setSelectedCategories(val); setCurrentPage(1); }}
+            onNeedsRevisionOnlyChange={(val) => { setNeedsRevisionOnly(val); setCurrentPage(1); }}
+            onReset={handleResetFilters}
+          />
           <div style={{ flex: 1 }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: gridView
-                  ? "repeat(5, minmax(0, 200px))"
-                  : "1fr",
-                columnGap: "9.75px",
-                rowGap: "12px",
-                justifyContent: "start",
-              }}
-            >
-              {loading ? (
-                <div>Загрузка объявлений...</div>
-              ) : (
-                ads.map((ad, index) => (
-                  <Link
-                    key={ad.title + index}
-                    to={`/ads/${ad.id}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <AdCard {...ad} />
-                  </Link>
-                ))
-              )}
-            </div>
+            <AdsGrid ads={ads} loading={loading} gridView={gridView} />
 
             <div style={{ marginTop: 24, textAlign: "center" }}>
               <Pagination
