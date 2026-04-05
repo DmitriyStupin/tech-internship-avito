@@ -10,10 +10,10 @@ import {
   Tooltip,
   Typography
 } from "antd";
-import {BulbOutlined, CloseCircleOutlined,} from "@ant-design/icons";
+import {BulbOutlined, CloseCircleOutlined, ReloadOutlined} from "@ant-design/icons";
 import styles from './EditAdPage.module.scss'
 import clsx from "clsx";
-import {useEffect, useRef, useState} from "react";
+import {type JSX, useEffect, useRef, useState} from "react";
 import {getAdById} from "../../shared/api/adApi.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {updateAdById} from "../../shared/api/adApiEdit.ts";
@@ -36,6 +36,22 @@ const EditAdPage = () => {
 
   const [aiPrice, setAiPrice] = useState<string | null>(null)
   const [aiPriceLoading, setAiPriceLoading] = useState(false)
+
+  const [descriptionButtonState, setDescriptionButtonState] = useState<{
+    text: string;
+    icon: JSX.Element;
+  }>({
+    text: form.getFieldValue("description") ? "Улучшить описание" : "Придумать описание",
+    icon: <BulbOutlined />,
+  });
+
+  const [priceButtonState, setPriceButtonState] = useState<{
+    text: string;
+    icon: JSX.Element;
+  }>({
+    text: "Узнать рыночную цену",
+    icon: <BulbOutlined />,
+  });
 
   const category = Form.useWatch<'electronics' | 'auto' | 'real_estate'>('category', form)
   
@@ -118,19 +134,27 @@ const EditAdPage = () => {
   }, [category]);
 
   const handleGenerateDescription = async () => {
-    const values = form.getFieldsValue()
+    const values = form.getFieldsValue();
 
-    setAiDescriptionLoading(true)
+    setAiDescriptionLoading(true);
 
     try {
-      const result = await generateDescription(values)
-      setAiDescription(result)
+      const result = await generateDescription(values);
+      setAiDescription(result);
+      setDescriptionButtonState({
+        text: "Повторить запрос",
+        icon: <ReloadOutlined />,
+      });
     } catch (error) {
-      setAiDescription("Произошла ошибка при запросе к AI. Попробуйте повторить запрос или закройте уведомление")
+      setAiDescription("Произошла ошибка при запросе к AI. Попробуйте повторить запрос или закройте уведомление");
+      setDescriptionButtonState({
+        text: "Повторить запрос",
+        icon: <ReloadOutlined />,
+      });
     } finally {
-      setAiDescriptionLoading(false)
+      setAiDescriptionLoading(false);
     }
-  }
+  };
 
   const handleGeneratePrice = async () => {
     const values = form.getFieldsValue();
@@ -139,12 +163,20 @@ const EditAdPage = () => {
     try {
       const result = await generatePrice(values);
       setAiPrice(result);
+      setPriceButtonState({
+        text: "Повторить запрос",
+        icon: <ReloadOutlined />,
+      });
     } catch {
       setAiPrice("Ошибка при запросе к AI");
+      setPriceButtonState({
+        text: "Повторить запрос",
+        icon: <ReloadOutlined />,
+      });
     } finally {
       setAiPriceLoading(false);
     }
-  }
+  };
 
   return (
     <div className={clsx(styles.pageInner, 'container')}>
@@ -244,7 +276,7 @@ const EditAdPage = () => {
               <Button
                 loading={aiPriceLoading}
                 onClick={handleGeneratePrice}
-                icon={<BulbOutlined />}
+                icon={priceButtonState.icon}
                 type="primary"
                 style={{
                   backgroundColor: "#f9f1e6",
@@ -253,7 +285,7 @@ const EditAdPage = () => {
                   boxShadow: 'none'
                 }}
               >
-                Узнать рыночную цену
+                {priceButtonState.text}
               </Button>
             </Tooltip>
           </Space>
@@ -375,7 +407,7 @@ const EditAdPage = () => {
           <Button
             loading={aiDescriptionLoading}
             type="primary"
-            icon={<BulbOutlined />}
+            icon={descriptionButtonState.icon}
             onClick={handleGenerateDescription}
             style={{
               backgroundColor: "#f9f1e6",
@@ -384,9 +416,7 @@ const EditAdPage = () => {
               boxShadow: 'none'
             }}
           >
-            {form.getFieldValue("description")
-              ? "Улучшить описание"
-              : "Придумать описание"}
+            {descriptionButtonState.text}
           </Button>
         </Tooltip>
 
