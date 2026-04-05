@@ -8,6 +8,12 @@ type AdCardProps = AdItem;
 const AdCard = (props: AdCardProps) => {
   const { category, title, price, needsRevision } = props;
 
+  const categoryNames = {
+    auto: 'Авто',
+    real_estate: 'Недвижимость',
+    electronics: 'Электроника'
+  }
+
   return (
     <div className={styles.card}>
       <img
@@ -20,7 +26,7 @@ const AdCard = (props: AdCardProps) => {
           <h3 className={styles.cardTitle} title={title}>{title}</h3>
           <p className={styles.cardPrice}>{price} ₽</p>
         </div>
-        <Tag className={styles.cardTag}>{category}</Tag>
+        <Tag className={styles.cardTag}>{categoryNames[category]}</Tag>
         {needsRevision && (
           <div className={styles.cardNeedsRevision}>
             <span className={styles.dot}></span>
