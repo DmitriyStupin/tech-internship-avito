@@ -91,7 +91,6 @@ const AdsPage = () => {
         </div>
 
         <div style={{ display: 'flex', gap: 24 }}>
-          {/* Фильтры */}
           <div className={styles.pageFiltersColumn}>
             <div className={styles.pageFilters}>
               <h3 className={styles.pageFiltersTitle}>Фильтры</h3>
@@ -129,8 +128,6 @@ const AdsPage = () => {
             </div>
             <Button onClick={handleResetFilters} style={{ marginTop: 12 }}>Сбросить фильтры</Button>
           </div>
-
-          {/* Список объявлений */}
           <div style={{ flex: 1 }}>
             <div
               style={{
@@ -147,7 +144,7 @@ const AdsPage = () => {
                 ads.map((ad, index) => (
                   <Link
                     key={ad.title + index}
-                    to={`/ads/${index + 1}`}
+                    to={`/ads/${ad.id}`}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     <AdCard {...ad} />
