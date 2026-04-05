@@ -1,6 +1,4 @@
-import {useEffect, useState} from "react";
-import {getAds} from "../../shared/api/adsApi.ts";
-import type {AdItem} from "../../shared/types/AdItem.ts";
+import {useEffect} from "react";
 import {Link} from "react-router-dom";
 import AdCard from "../../shared/ui/AdCard";
 import styles from './AdsPage.module.scss'
@@ -22,47 +20,18 @@ import {
   UnorderedListOutlined
 } from "@ant-design/icons";
 import clsx from "clsx";
+import {useAdsStore} from "../../shared/store/adsStore.ts";
 
 const {Option} = Select;
 
 const AdsPage = () => {
-  const [ads, setAds] = useState<AdItem[]>([])
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [needsRevisionOnly, setNeedsRevisionOnly] = useState(false)
-  const [sortOption, setSortOption] = useState('nameAsc')
-  const [currentPage, setCurrentPage] = useState(1);
-  const [gridView, setGridView] = useState(true)
-  const pageSize = gridView ? 10 : 5
-
-  const fetchAds = async () => {
-    setLoading(true)
-
-    try {
-      const sortColumn = sortOption === "nameAsc" || sortOption === "nameDesc" ? "title" : "createdAt";
-      const sortDirection =
-        sortOption === "nameAsc" || sortOption === "dateNew" || sortOption === "priceAsc"
-          ? "asc"
-          : "desc";
-
-      const res = await getAds({
-        q: searchQuery || undefined,
-        limit: pageSize,
-        skip: (currentPage - 1) * pageSize,
-        needsRevision: needsRevisionOnly ? true : undefined,
-        categories: selectedCategories.length > 0 ? selectedCategories.join(",") : undefined,
-        sortColumn,
-        sortDirection
-      });
-
-      setAds(res.data.items);
-      setTotal(res.data.total);
-    } finally {
-      setLoading(false)
-    }
-  }
+  const {
+    ads, total, loading, searchQuery, selectedCategories,
+    needsRevisionOnly, sortOption, currentPage, gridView, pageSize,
+    fetchAds,
+    setSearchQuery, setSelectedCategories, setNeedsRevisionOnly,
+    setSortOption, setCurrentPage, setGridView
+  } = useAdsStore();
 
   useEffect(() => {
     fetchAds();
