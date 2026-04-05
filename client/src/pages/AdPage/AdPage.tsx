@@ -1,4 +1,4 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import type {ItemDetails} from "../../shared/types/ItemDetails.ts";
 import {getAdById} from "../../shared/api/adApi.ts";
@@ -7,10 +7,12 @@ import {EditOutlined} from "@ant-design/icons";
 import placeholder from '../../assets/placeholder.png';
 import styles from './AdPage.module.scss';
 import clsx from "clsx";
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const AdPage = () => {
   const {id} = useParams<{ id: string }>()
   const [ad, setAd] = useState<ItemDetails | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!id) return;
@@ -92,6 +94,14 @@ const AdPage = () => {
   return (
     <div className={styles.page}>
       <div className={clsx(styles.pageInner, 'container')}>
+        <Button
+          type="link" // или "default", "text"
+          icon={<ArrowLeftOutlined />}
+          onClick={() => navigate('/ads')} // Возврат на -1 страницу в истории
+          style={{ margin: 0, padding: 0 ,alignSelf: 'flex-start' }}
+        >
+          Назад
+        </Button>
         <div className={styles.pageHeader}>
           <div className={styles.pageHeaderLeft}>
             <h1 className={styles.pageHeaderLeftTitle}>{ad.title}</h1>
