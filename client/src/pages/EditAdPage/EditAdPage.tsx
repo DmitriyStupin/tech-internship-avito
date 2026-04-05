@@ -4,7 +4,7 @@ import {
   Form,
   Input,
   InputNumber,
-  message,
+  notification,
   Select,
   Space,
   Typography
@@ -44,7 +44,10 @@ const EditAdPage = () => {
 
     if (savedAd) {
       form.setFieldsValue(JSON.parse(savedAd))
-      message.success("Черновик загружен");
+      notification.success({
+        title: "Черновик загружен",
+        placement: "topRight",
+      });
       return
     }
 
@@ -61,7 +64,11 @@ const EditAdPage = () => {
         })
       })
       .catch(() => {
-        message.error("Ошибка загрузки объявления");
+        notification.error({
+          title: "Ошибка загрузки объявления",
+          description: "Попробуйте ещё раз",
+          placement: "topRight",
+        });
       });
   }, [id, form]);
 
@@ -71,11 +78,18 @@ const EditAdPage = () => {
     updateAdById(Number(id), values)
       .then(() => {
         localStorage.removeItem(storageKey)
-        message.success("Изменения сохранены");
+        notification.success({
+          title: 'Изменения сохранены',
+          placement: 'topRight'
+        })
         navigate(`/ads/${id}`);
       })
       .catch(() => {
-        message.error("Ошибка сохранения");
+        notification.error({
+          title: "Ошибка сохранения",
+          description: "При попытке сохранить изменения произошла ошибка. Попробуйте ещё раз или зайдите позже.",
+          placement: "topRight",
+        });
       });
   }
 
