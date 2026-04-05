@@ -7,6 +7,7 @@ import {
   notification,
   Select,
   Space,
+  Tooltip,
   Typography
 } from "antd";
 import {BulbOutlined, CloseCircleOutlined,} from "@ant-design/icons";
@@ -261,18 +262,80 @@ const EditAdPage = () => {
           />
         </Form.Item>
 
-        <Button
-          type="primary"
-          icon={<BulbOutlined />}
-          style={{
-            backgroundColor: "#f9f1e6",
-            borderRadius: "8px",
-            color: "#ffa940",
-            boxShadow: 'none'
+        <Tooltip
+          open={!!aiDescription}
+          styles={{
+            container: {
+              padding: '8px',
+              background: '#ffffff',
+              width: "332px",
+              borderRadius: "2px",
+            },
+            arrow: {
+              background: '#ffffff',
+            },
           }}
+          title={
+            <div
+              style={{
+                display: "flex",
+                flexDirection: 'column',
+                gap: "8px",
+                fontSize: '12px',
+                lineHeight: '1.33',
+                letterSpacing: '0.03em',
+                color: "#1e1e1e",
+              }}
+            >
+              <Title
+                style={{
+                  margin: 0,
+                  fontWeight: '500',
+                  fontSize: '12px',
+                  lineHeight: '1.33',
+                  letterSpacing: '0.03em',
+                  color: "#1e1e1e",
+                }}
+              >Ответ AI:</Title>
+              <p style={{fontSize: '12px', margin: 0}}>{aiDescription}</p>
+              <Space>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    form.setFieldValue("description", aiDescription);
+                    setAiDescription(null);
+                  }}
+                >
+                  Применить
+                </Button>
+
+                <Button
+                  size="small"
+                  onClick={() => setAiDescription(null)}
+                >
+                  Закрыть
+                </Button>
+              </Space>
+            </div>
+          }
         >
-          Улучшить описание
-        </Button>
+          <Button
+            loading={aiDescriptionLoading}
+            type="primary"
+            icon={<BulbOutlined />}
+            onClick={handleGenerateDescription}
+            style={{
+              backgroundColor: "#f9f1e6",
+              borderRadius: "8px",
+              color: "#ffa940",
+              boxShadow: 'none'
+            }}
+          >
+            {form.getFieldValue("description")
+              ? "Улучшить описание"
+              : "Придумать описание"}
+          </Button>
+        </Tooltip>
 
         <Divider />
 
