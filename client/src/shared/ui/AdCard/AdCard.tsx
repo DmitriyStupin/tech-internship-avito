@@ -2,6 +2,7 @@ import { Tag } from "antd";
 import placeholder from '../../../assets/placeholder.png';
 import type { AdItem } from "../../types/AdItem.ts";
 import styles from './AdCard.module.scss';
+import clsx from "clsx";
 
 type AdCardProps = AdItem;
 
@@ -15,7 +16,7 @@ const AdCard = (props: AdCardProps) => {
   }
 
   return (
-    <div className={styles.card}>
+    <div className={clsx(styles.card)}>
       <img
         alt="placeholder"
         src={placeholder}

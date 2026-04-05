@@ -34,8 +34,8 @@ const AdsPage = () => {
   const [needsRevisionOnly, setNeedsRevisionOnly] = useState(false)
   const [sortOption, setSortOption] = useState('nameAsc')
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10
   const [gridView, setGridView] = useState(true)
+  const pageSize = gridView ? 10 : 5
 
   const fetchAds = async () => {
     setLoading(true)

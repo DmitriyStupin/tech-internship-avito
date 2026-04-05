@@ -1,9 +1,9 @@
 .card {
-  width: 200px;
   background: #fff;
   border: 1px solid #f0f0f0;
   border-radius: 16px;
   position: relative;
+  height: 100%;
 
   &Image {
     width: 200px;
@@ -25,12 +25,16 @@
     gap: 4px;
   }
 
+  &InfoFullWidth {
+    display: none;
+  }
+
   &Title {
     font-size: 16px;
     font-weight: 400;
-    white-space: nowrap;       // одна строка
-    overflow: hidden;          // обрезка текста
-    text-overflow: ellipsis;   // троеточие
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &Price {
