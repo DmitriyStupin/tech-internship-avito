@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import type { AdItem } from '../types/AdItem.ts';
-import { getAds } from '../api/adsApi.ts';
+import { create } from "zustand";
+import type { AdItem } from "../types/AdItem.ts";
+import { getAds } from "../api/adsApi.ts";
 
 type AdsStore = {
   ads: AdItem[];
@@ -26,10 +26,10 @@ export const useAdsStore = create<AdsStore>((set, get) => ({
   ads: [],
   total: 0,
   loading: false,
-  searchQuery: '',
+  searchQuery: "",
   selectedCategories: [],
   needsRevisionOnly: false,
-  sortOption: 'nameAsc',
+  sortOption: "nameAsc",
   currentPage: 1,
   gridView: true,
   pageSize: 10,
@@ -39,20 +39,27 @@ export const useAdsStore = create<AdsStore>((set, get) => ({
     const state = get();
 
     try {
-      const sortColumn = state.sortOption === 'nameAsc' || state.sortOption === 'nameDesc' ? 'title' : 'createdAt';
+      const sortColumn =
+        state.sortOption === "nameAsc" || state.sortOption === "nameDesc"
+          ? "title"
+          : "createdAt";
       const sortDirection =
-        state.sortOption === 'nameAsc' || state.sortOption === 'dateNew' || state.sortOption === 'priceAsc'
-          ? 'asc'
-          : 'desc';
+        state.sortOption === "nameAsc" ||
+        state.sortOption === "dateNew" ||
+        state.sortOption === "priceAsc"
+          ? "asc"
+          : "desc";
 
       const res = await getAds({
         q: state.searchQuery || undefined,
         limit: state.pageSize,
         skip: (state.currentPage - 1) * state.pageSize,
         needsRevision: state.needsRevisionOnly ? true : undefined,
-        categories: state.selectedCategories.length ? state.selectedCategories.join(',') : undefined,
+        categories: state.selectedCategories.length
+          ? state.selectedCategories.join(",")
+          : undefined,
         sortColumn,
-        sortDirection
+        sortDirection,
       });
 
       set({
@@ -65,8 +72,10 @@ export const useAdsStore = create<AdsStore>((set, get) => ({
   },
 
   setSearchQuery: (q) => set({ searchQuery: q, currentPage: 1 }),
-  setSelectedCategories: (cats) => set({ selectedCategories: cats, currentPage: 1 }),
-  setNeedsRevisionOnly: (val) => set({ needsRevisionOnly: val, currentPage: 1 }),
+  setSelectedCategories: (cats) =>
+    set({ selectedCategories: cats, currentPage: 1 }),
+  setNeedsRevisionOnly: (val) =>
+    set({ needsRevisionOnly: val, currentPage: 1 }),
   setSortOption: (val) => set({ sortOption: val }),
   setCurrentPage: (val) => set({ currentPage: val }),
   setGridView: (val) => set({ gridView: val, pageSize: val ? 10 : 5 }),

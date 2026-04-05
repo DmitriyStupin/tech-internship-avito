@@ -1,3 +1,3 @@
-import type {ItemDetails} from "./ItemDetails.ts";
+import type { ItemDetails } from "./ItemDetails.ts";
 
-export type GetAdResponse = ItemDetails
+export type GetAdResponse = ItemDetails;

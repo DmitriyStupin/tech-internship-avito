@@ -1,7 +1,7 @@
-import {useEffect} from "react";
-import {Link} from "react-router-dom";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import AdCard from "../../shared/ui/AdCard";
-import styles from './AdsPage.module.scss'
+import styles from "./AdsPage.module.scss";
 
 import {
   Button,
@@ -12,30 +12,48 @@ import {
   Pagination,
   Select,
   Space,
-  Switch
+  Switch,
 } from "antd";
 import {
   AppstoreOutlined,
   SearchOutlined,
-  UnorderedListOutlined
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import clsx from "clsx";
-import {useAdsStore} from "../../shared/store/adsStore.ts";
+import { useAdsStore } from "../../shared/store/adsStore.ts";
 
-const {Option} = Select;
+const { Option } = Select;
 
 const AdsPage = () => {
   const {
-    ads, total, loading, searchQuery, selectedCategories,
-    needsRevisionOnly, sortOption, currentPage, gridView, pageSize,
+    ads,
+    total,
+    loading,
+    searchQuery,
+    selectedCategories,
+    needsRevisionOnly,
+    sortOption,
+    currentPage,
+    gridView,
+    pageSize,
     fetchAds,
-    setSearchQuery, setSelectedCategories, setNeedsRevisionOnly,
-    setSortOption, setCurrentPage, setGridView
+    setSearchQuery,
+    setSelectedCategories,
+    setNeedsRevisionOnly,
+    setSortOption,
+    setCurrentPage,
+    setGridView,
   } = useAdsStore();
 
   useEffect(() => {
     fetchAds();
-  }, [searchQuery, selectedCategories, needsRevisionOnly, sortOption, currentPage]);
+  }, [
+    searchQuery,
+    selectedCategories,
+    needsRevisionOnly,
+    sortOption,
+    currentPage,
+  ]);
 
   const handleResetFilters = () => {
     setSearchQuery("");
@@ -46,12 +64,12 @@ const AdsPage = () => {
   };
 
   if (!ads.length) {
-    return <div>Загрузка объвлений...</div>
+    return <div>Загрузка объвлений...</div>;
   }
 
   return (
     <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      <div className={clsx(styles.pageInner, 'container')}>
+      <div className={clsx(styles.pageInner, "container")}>
         <div className={styles.pageTop}>
           <h1 className={styles.pageTitle}>Мои объявления</h1>
           <span className={styles.pageSubtitle}>{total} объявлений</span>
@@ -63,7 +81,10 @@ const AdsPage = () => {
             suffix={<SearchOutlined />}
             className={styles.pageTopControlsSearch}
             value={searchQuery}
-            onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
           />
           <div className={styles.pageTopControlsRight}>
             <div className={styles.pageTopControlsButtons}>
@@ -79,7 +100,11 @@ const AdsPage = () => {
               />
             </div>
 
-            <Select value={sortOption} onChange={val => setSortOption(val)} className="sortSelect">
+            <Select
+              value={sortOption}
+              onChange={(val) => setSortOption(val)}
+              className="sortSelect"
+            >
               <Option value="nameAsc">Название: А → Я</Option>
               <Option value="nameDesc">Название: Я → А</Option>
               <Option value="dateNew">Сначала новые</Option>
@@ -90,24 +115,31 @@ const AdsPage = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 24 }}>
+        <div style={{ display: "flex", gap: 24 }}>
           <div className={styles.pageFiltersColumn}>
             <div className={styles.pageFilters}>
               <h3 className={styles.pageFiltersTitle}>Фильтры</h3>
               <Collapse
                 bordered={false}
-                defaultActiveKey={['1']}
+                defaultActiveKey={["1"]}
                 className={styles.pageFiltersCollapse}
                 expandIconPlacement="end"
                 items={[
                   {
-                    key: '1',
-                    label: 'Категории',
+                    key: "1",
+                    label: "Категории",
                     children: (
                       <Checkbox.Group
-                        style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 8,
+                        }}
                         value={selectedCategories}
-                        onChange={val => { setSelectedCategories(val as string[]); setCurrentPage(1); }}
+                        onChange={(val) => {
+                          setSelectedCategories(val as string[]);
+                          setCurrentPage(1);
+                        }}
                       >
                         <Checkbox value="auto">Авто</Checkbox>
                         <Checkbox value="real_estate">Недвижимость</Checkbox>
@@ -122,20 +154,27 @@ const AdsPage = () => {
                 <span>Только требующие доработок</span>
                 <Switch
                   checked={needsRevisionOnly}
-                  onChange={val => { setNeedsRevisionOnly(val); setCurrentPage(1); }}
+                  onChange={(val) => {
+                    setNeedsRevisionOnly(val);
+                    setCurrentPage(1);
+                  }}
                 />
               </Space>
             </div>
-            <Button onClick={handleResetFilters} style={{ marginTop: 12 }}>Сбросить фильтры</Button>
+            <Button onClick={handleResetFilters} style={{ marginTop: 12 }}>
+              Сбросить фильтры
+            </Button>
           </div>
           <div style={{ flex: 1 }}>
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: gridView ? 'repeat(5, minmax(0, 200px))' : '1fr',
-                columnGap: '9.75px',
-                rowGap: '12px',
-                justifyContent: 'start',
+                display: "grid",
+                gridTemplateColumns: gridView
+                  ? "repeat(5, minmax(0, 200px))"
+                  : "1fr",
+                columnGap: "9.75px",
+                rowGap: "12px",
+                justifyContent: "start",
               }}
             >
               {loading ? (
@@ -145,7 +184,7 @@ const AdsPage = () => {
                   <Link
                     key={ad.title + index}
                     to={`/ads/${ad.id}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <AdCard {...ad} />
                   </Link>
@@ -153,12 +192,12 @@ const AdsPage = () => {
               )}
             </div>
 
-            <div style={{ marginTop: 24, textAlign: 'center' }}>
+            <div style={{ marginTop: 24, textAlign: "center" }}>
               <Pagination
                 total={total}
                 pageSize={pageSize}
                 current={currentPage}
-                onChange={page => setCurrentPage(page)}
+                onChange={(page) => setCurrentPage(page)}
               />
             </div>
           </div>

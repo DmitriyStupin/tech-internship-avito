@@ -11,7 +11,9 @@ type GetAdsParams = {
   sortDirection?: "asc" | "desc";
 };
 
-export const getAds = (params?: GetAdsParams): Promise<{ data: GetAdsResponse }> => {
+export const getAds = (
+  params?: GetAdsParams,
+): Promise<{ data: GetAdsResponse }> => {
   const query = new URLSearchParams();
 
   if (params?.q) query.append("q", params.q);
@@ -20,7 +22,8 @@ export const getAds = (params?: GetAdsParams): Promise<{ data: GetAdsResponse }>
   if (params?.needsRevision) query.append("needsRevision", "true");
   if (params?.categories) query.append("categories", params.categories);
   if (params?.sortColumn) query.append("sortColumn", params.sortColumn);
-  if (params?.sortDirection) query.append("sortDirection", params.sortDirection);
+  if (params?.sortDirection)
+    query.append("sortDirection", params.sortDirection);
 
   const url = "/items" + (query.toString() ? `?${query.toString()}` : "");
 

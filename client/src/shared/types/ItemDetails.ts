@@ -1,12 +1,12 @@
 import type {
   AutoItemParams,
   ElectronicsItemParams,
-  RealEstateItemParams
+  RealEstateItemParams,
 } from "./ItemParams.ts";
 
 export type ItemDetails = {
   id: number;
-  category: 'auto' | 'real_estate' | 'electronics';
+  category: "auto" | "real_estate" | "electronics";
   title: string;
   description?: string;
   price: number;
@@ -14,4 +14,4 @@ export type ItemDetails = {
   params: AutoItemParams | RealEstateItemParams | ElectronicsItemParams;
   createdAt: string; // под вопросом
   updatedAt: string; // под вопросом
-}
+};

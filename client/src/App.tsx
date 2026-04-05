@@ -1,11 +1,10 @@
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AdsPage from "./pages/AdsPage";
 import AdPage from "./pages/AdPage";
 import EditAdPage from "./pages/EditAdPage";
-import './shared/styles'
+import "./shared/styles";
 
 const App = () => {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -16,7 +15,7 @@ const App = () => {
         <Route path="/ads/:id/edit" element={<EditAdPage />} />
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;

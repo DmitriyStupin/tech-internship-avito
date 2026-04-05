@@ -1,11 +1,11 @@
 import type {
   AutoItemParams,
   ElectronicsItemParams,
-  RealEstateItemParams
+  RealEstateItemParams,
 } from "./ItemParams.ts";
 
 export type ItemUpdateIn = {
-  category: 'auto' | 'real_estate' | 'electronics';
+  category: "auto" | "real_estate" | "electronics";
   title: string;
   description?: string;
   price: number;

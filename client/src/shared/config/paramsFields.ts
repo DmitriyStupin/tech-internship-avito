@@ -1,58 +1,72 @@
-type FieldType = 'text' | 'number' | 'select'
+type FieldType = "text" | "number" | "select";
 
 type ParamField = {
-  name: string
-  label: string
-  type: FieldType
-  options?: { label: string; value: string }[]
-}
+  name: string;
+  label: string;
+  type: FieldType;
+  options?: { label: string; value: string }[];
+};
 
 type ParamsConfig = {
-  electronics: ParamField[]
-  auto: ParamField[]
-  real_estate: ParamField[]
-}
+  electronics: ParamField[];
+  auto: ParamField[];
+  real_estate: ParamField[];
+};
 
 export const paramsFieldsConfig: ParamsConfig = {
   electronics: [
     {
-      name: "type", label: "Тип", type: 'select', options: [
-        {label: "Телефон", value: "phone"},
-        {label: "Ноутбук", value: "laptop"},
-        {label: "Разное", value: "misc"},
-      ]
+      name: "type",
+      label: "Тип",
+      type: "select",
+      options: [
+        { label: "Телефон", value: "phone" },
+        { label: "Ноутбук", value: "laptop" },
+        { label: "Разное", value: "misc" },
+      ],
     },
-    {name: "brand", label: "Бренд", type: 'text'},
-    {name: "model", label: "Модель", type: 'text'},
+    { name: "brand", label: "Бренд", type: "text" },
+    { name: "model", label: "Модель", type: "text" },
     {
-      name: "condition", label: "Состояние", type: 'select', options: [
-        {label: "Новое", value: "new"},
-        {label: "Б/У", value: "used"},
-      ]
+      name: "condition",
+      label: "Состояние",
+      type: "select",
+      options: [
+        { label: "Новое", value: "new" },
+        { label: "Б/У", value: "used" },
+      ],
     },
-    {name: "color", label: "Цвет", type: 'text'},
+    { name: "color", label: "Цвет", type: "text" },
   ],
   auto: [
-    {name: "brand", label: "Бренд", type: "text"},
-    {name: "model", label: "Модель", type: "text"},
-    {name: "yearOfManufacture", label: "Год выпуска", type: "number"},
+    { name: "brand", label: "Бренд", type: "text" },
+    { name: "model", label: "Модель", type: "text" },
+    { name: "yearOfManufacture", label: "Год выпуска", type: "number" },
     {
-      name: "transmission", label: "Коробка передач", type: "select", options: [
-        {label: "Автомат", value: "automatic"},
-        {label: "Механика", value: "manual"},
-      ]
+      name: "transmission",
+      label: "Коробка передач",
+      type: "select",
+      options: [
+        { label: "Автомат", value: "automatic" },
+        { label: "Механика", value: "manual" },
+      ],
     },
-    {name: "mileage", label: "Пробег", type: "number"},
-    {name: "enginePower", label: "Мощность", type: "number"},
+    { name: "mileage", label: "Пробег", type: "number" },
+    { name: "enginePower", label: "Мощность", type: "number" },
   ],
   real_estate: [
-    {name: "type", label: "Тип", type: 'select', options: [
-        {label: "Квартира", value: "flat"},
-        {label: "Дом", value: "house"},
-        {label: "Комната", value: "room"},
-      ]},
-    {name: "address", label: "Адрес", type: 'text'},
-    {name: "area", label: "Площадь", type: 'number'},
-    {name: "floor", label: "Этаж", type: 'number'},
+    {
+      name: "type",
+      label: "Тип",
+      type: "select",
+      options: [
+        { label: "Квартира", value: "flat" },
+        { label: "Дом", value: "house" },
+        { label: "Комната", value: "room" },
+      ],
+    },
+    { name: "address", label: "Адрес", type: "text" },
+    { name: "area", label: "Площадь", type: "number" },
+    { name: "floor", label: "Этаж", type: "number" },
   ],
 };

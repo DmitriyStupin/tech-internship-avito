@@ -1,1 +1,1 @@
-export { default } from './EditAdPage.tsx'
+export { default } from "./EditAdPage.tsx";
