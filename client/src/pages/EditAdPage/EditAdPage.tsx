@@ -18,7 +18,7 @@ import {getAdById} from "../../shared/api/adApi.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {updateAdById} from "../../shared/api/adApiEdit.ts";
 import {paramsFieldsConfig} from "../../shared/config/paramsFields.ts";
-import {generateDescription} from "../../shared/api/aiApi.ts";
+import {generateDescription, generatePrice} from "../../shared/api/aiApi.ts";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -35,15 +35,15 @@ const EditAdPage = () => {
   const [aiDescriptionLoading, setAiDescriptionLoading] = useState(false)
 
   const [aiPrice, setAiPrice] = useState<string | null>(null)
-  const [aiDPriceLoading, setAiPriceLoading] = useState(false)
+  const [aiPriceLoading, setAiPriceLoading] = useState(false)
 
   const category = Form.useWatch<'electronics' | 'auto' | 'real_estate'>('category', form)
-  const requiredFields = Form.useWatch([], form);
-
+  
   const isFormValid =
-    requiredFields?.category &&
-    requiredFields?.title &&
-    requiredFields?.price;
+    form.getFieldValue("category") &&
+    form.getFieldValue("title") &&
+    form.getFieldValue("price") &&
+    !form.getFieldsError().some(f => f.errors.length > 0)
 
   useEffect(() => {
     if (!id) return
@@ -132,6 +132,20 @@ const EditAdPage = () => {
     }
   }
 
+  const handleGeneratePrice = async () => {
+    const values = form.getFieldsValue();
+
+    setAiPriceLoading(true);
+    try {
+      const result = await generatePrice(values);
+      setAiPrice(result);
+    } catch {
+      setAiPrice("Ошибка при запросе к AI");
+    } finally {
+      setAiPriceLoading(false);
+    }
+  }
+
   return (
     <div className={clsx(styles.pageInner, 'container')}>
       <Title level={2}>Редактирование объявления</Title>
@@ -191,18 +205,57 @@ const EditAdPage = () => {
                 placeholder="Введите цену"
               />
             </Form.Item>
-            <Button
-              type="primary"
-              icon={<BulbOutlined />}
-              style={{
-                backgroundColor: "#f9f1e6",
-                borderRadius: "8px",
-                color: "#ffa940",
-                boxShadow: "none",
+            <Tooltip
+              styles={{
+                container: {
+                  padding: '8px',
+                  background: '#ffffff',
+                  width: "332px",
+                  borderRadius: "2px",
+                },
+                arrow: {
+                  background: '#ffffff',
+                },
               }}
+              open={!!aiPrice}
+              title={
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: 'column',
+                    gap: "8px",
+                    fontSize: '12px',
+                    lineHeight: '1.33',
+                    letterSpacing: '0.03em',
+                    color: "#1e1e1e",
+                  }}
+                >
+                  <pre style={{whiteSpace: "pre-wrap"}}>{aiPrice}</pre>
+
+                  <Button
+                    size="small"
+                    onClick={() => setAiPrice(null)}
+                  >
+                    Закрыть
+                  </Button>
+                </div>
+              }
             >
-              Узнать рыночную цену
-            </Button>
+              <Button
+                loading={aiPriceLoading}
+                onClick={handleGeneratePrice}
+                icon={<BulbOutlined />}
+                type="primary"
+                style={{
+                  backgroundColor: "#f9f1e6",
+                  borderRadius: "8px",
+                  color: "#ffa940",
+                  boxShadow: 'none'
+                }}
+              >
+                Узнать рыночную цену
+              </Button>
+            </Tooltip>
           </Space>
         </Form.Item>
 
