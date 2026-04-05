@@ -12,11 +12,12 @@ import {
 import {BulbOutlined, CloseCircleOutlined,} from "@ant-design/icons";
 import styles from './EditAdPage.module.scss'
 import clsx from "clsx";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {getAdById} from "../../shared/api/adApi.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {updateAdById} from "../../shared/api/adApiEdit.ts";
 import {paramsFieldsConfig} from "../../shared/config/paramsFields.ts";
+import {generateDescription} from "../../shared/api/aiApi.ts";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -28,6 +29,12 @@ const EditAdPage = () => {
   const isInitialLoad = useRef(true)
   const storageKey = `edit-ad-${id}`
   const params = Form.useWatch("params", form);
+
+  const [aiDescription, setAiDescription] = useState<string | null>(null)
+  const [aiDescriptionLoading, setAiDescriptionLoading] = useState(false)
+
+  const [aiPrice, setAiPrice] = useState<string | null>(null)
+  const [aiDPriceLoading, setAiPriceLoading] = useState(false)
 
   const category = Form.useWatch<'electronics' | 'auto' | 'real_estate'>('category', form)
   const requiredFields = Form.useWatch([], form);
@@ -108,6 +115,21 @@ const EditAdPage = () => {
       },
     ]);
   }, [category]);
+
+  const handleGenerateDescription = async () => {
+    const values = form.getFieldsValue()
+
+    setAiDescriptionLoading(true)
+
+    try {
+      const result = await generateDescription(values)
+      setAiDescription(result)
+    } catch (error) {
+      setAiDescription("Произошла ошибка при запросе к AI. Попробуйте повторить запрос или закройте уведомление")
+    } finally {
+      setAiDescriptionLoading(false)
+    }
+  }
 
   return (
     <div className={clsx(styles.pageInner, 'container')}>
@@ -272,7 +294,6 @@ const EditAdPage = () => {
       </Form>
     </div>
   )
-    ;
 };
 
 export default EditAdPage;
