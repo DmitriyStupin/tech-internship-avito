@@ -32,6 +32,7 @@ const EditAdPage = () => {
     getAdById(Number(id))
       .then((res) => {
         const item = res.data
+        console.log(item)
 
         form.setFieldsValue({
           category: item.category,
@@ -100,15 +101,19 @@ const EditAdPage = () => {
 
         <Form.Item
           label="Цена"
-          name="price"
-          rules={[{required: true, message: "Цена должна быть заполнена"}]}
+          required
         >
           <Space style={{width: "100%"}}>
-            <InputNumber
-              style={{width: "100%"}}
-              placeholder="Введите цену"
-              type={"number"}
-            />
+            <Form.Item
+              name="price"
+              noStyle
+              rules={[{required: true, message: "Цена должна быть заполнена"}]}
+            >
+              <InputNumber
+                style={{width: "100%"}}
+                placeholder="Введите цену"
+              />
+            </Form.Item>
             <Button
               type="primary"
               icon={<BulbOutlined />}
@@ -116,7 +121,7 @@ const EditAdPage = () => {
                 backgroundColor: "#f9f1e6",
                 borderRadius: "8px",
                 color: "#ffa940",
-                boxShadow: 'none'
+                boxShadow: "none",
               }}
             >
               Узнать рыночную цену
